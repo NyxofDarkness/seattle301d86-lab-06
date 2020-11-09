@@ -9,6 +9,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(cors());
 
+app.get('/', (req, res) => {
+  res.send('Homepage');
+})
+
 app.get('/location', handleLocation);
 
 function handleLocation(request, response) {
