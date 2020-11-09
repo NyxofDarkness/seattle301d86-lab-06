@@ -57,3 +57,4 @@ app.listen(PORT, () => {
   console.log('server up');
 })
 
+app.use(express.static('./public'));
