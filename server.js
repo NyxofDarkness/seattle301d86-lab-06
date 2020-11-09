@@ -33,12 +33,12 @@ function Location(city, geoData) {
   this.longitude = geoData[0].lon;
 }
 
-app.get('/WeatherLocation', handleWeather);
+app.get('/weather', handleWeather);
 
 function handleWeather(request, response) {
   try {
     let weatherData = require('./data/weather.json');
-    let city = request.query.city;
+    let city = request.query.city_name;
     let locationWeather = new WeatherLocation(city, weatherData);
     response.send(locationWeather);
   } catch (error) {
