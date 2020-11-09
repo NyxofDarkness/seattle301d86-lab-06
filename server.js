@@ -1,14 +1,14 @@
-'use strict'
+'use strict';
 
 require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
-const app = express();
+const app = express('.');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 app.use(cors());
-
+// app.use(express.static('./public'));
 app.get('/', (req, res) => {
   res.send('Homepage');
 })
@@ -53,6 +53,9 @@ function WeatherLocation(city, weatherData) {
   this.longitude = weatherData[0].lon;
 }
 
+app.get('/webpage', (request, response) => {
+  response.send('cool, you found a website');
+});
 
 app.use('*', (request, response) => {
   response.status(404).send('sorry, not found!');
@@ -62,4 +65,4 @@ app.listen(PORT, () => {
   console.log('server up');
 })
 
-app.use(express.static('./public'));
+
