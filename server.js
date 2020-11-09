@@ -1,4 +1,5 @@
 'use strict'
+
 require('dotenv').config();
 
 const express = require('express');
@@ -28,7 +29,7 @@ function Location(city, geoData) {
   this.longitude = geoData[0].lon;
 }
 
-app.get('/WeatherLocation', handleweather);
+app.get('/WeatherLocation', handleWeather);
 
 function handleWeather(request, response) {
   try {
