@@ -2,18 +2,17 @@
 
 require('dotenv').config();
 
+let weatherLocation = [];
 const express = require('express');
 const cors = require('cors');
 const app = express('.');
 
 const PORT = process.env.PORT || 5000;
 app.use(cors());
-// app.use(express.static('./public'));
+app.use(express.static('./public'));
 app.get('/', (req, res) => {
   res.send('Homepage');
 })
-
-app.get('/location', handleLocation);
 
 function handleLocation(request, response) {
   try {
@@ -33,14 +32,18 @@ function Location(city, geoData) {
   this.longitude = geoData[0].lon;
 }
 
-app.get('/weather', handleWeather);
 
 function handleWeather(request, response) {
   try {
     let weatherData = require('./data/weather.json');
-    let city = request.query.city_name;
-    let locationWeather = new WeatherLocation(city, weatherData);
-    response.send(locationWeather);
+    let cityWeather = request.query.city;
+    // let newArray = weatherData.data;
+    weatherData.data.forEach(element => {
+      new WeatherLocation(cityWeather, element);
+    });
+    response.send(weatherLocation);
+    // do i need an array to even out location data?
+    // response.send(locationWeather);
   } catch (error) {
     console.error(error);
   }
@@ -48,10 +51,13 @@ function handleWeather(request, response) {
 
 function WeatherLocation(city, weatherData) {
   this.search_query = city;
-  this.formatted_query = weatherData[0].city_name;
-  this.latitude = weatherData[0].lat;
-  this.longitude = weatherData[0].lon;
+  this.forecast = weatherData.weather.description;
+  this.time = weatherData.valid_date;
+  console.log(this.time, this.forecast);
+
 }
+app.get('/weather', handleWeather);
+app.get('/location', handleLocation);
 
 app.get('/webpage', (request, response) => {
   response.send('cool, you found a website');
