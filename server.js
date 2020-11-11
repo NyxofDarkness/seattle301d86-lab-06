@@ -4,11 +4,11 @@ require('dotenv').config();
 
 
 const express = require('express');
+const pg = require('pg'); //between server and database!
 const superagent = require('superagent');
-const dotenv = require('dotenv');
 const cors = require('cors');
 
-dotenv.config();
+const client = new pg.Client(process.env.DATABASE_URL);
 
 const app = express('.');
 const PORT = process.env.PORT || 5000;
@@ -16,6 +16,18 @@ const GEOCODE_API_KEY = process.env.GEOCODE_API_KEY;
 const ZOMATO_API_KEY = process.env.ZOMATO_API_KEY;
 const WEATHERBIT_API_KEY = process.env.WEATHERBIT_API_KEY;
 const TRAIL_API_KEY = process.env.TRAIL_API_KEY;
+
+client.connect()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`server up! ${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.error(err);
+  })
+
+
 
 app.use(cors());
 // checks done to here. all green
@@ -99,17 +111,27 @@ function handleWeather(req, res) {
 
 function handleTrails(req, res) {
 
-  let city = req.query.search_query;
-  let url = `https://www.hikingproject.com/data/get-trails?lat=${geoData}&lon=${geoData}&maxDistance=30&key=${TRAIL_API_KEY}`
-  //////// lat and long not working in this one? maybe add a global array?
-  superagent.get(url)
-    .then(trailForCity => {
-      trailForCity.body.handleTrails.map(element =>
-        new Trails(element));
-      res.json(trailForCity);
-    })
-    .catch(error => console.error(error))
+  let lat = req.query.latitude;
+  let lon = req.query.longitude;
+  let url = `https://www.hikingproject.com/data/get-trails?lat=${lat}&lon=${lon}&key=${TRAIL_API_KEY}&format=json`;
+  let trails = {};
+
+  if (trails[url]) {
+    res.send(trails[url]);
+  } else {
+    superagent.get(url)
+      .then(trails => {
+        const trailData = trails.body;
+        Trails.all = trailData.trails.map(object => new Trails(object));
+        trails[url] = Trails.all;
+        res.json(Trails.all);
+      })
+      .catch((error) => {
+        console.error(error, 'did not work');
+      })
+  }
 }
+
 function Trails(trailForCity) {
   this.name = trailForCity.name;
   this.location = trailForCity.location;
@@ -153,6 +175,4 @@ app.use('*', (req, res) => {
   res.status(404).send('sorry, not found!');
 })
 
-app.listen(PORT, () => {
-  console.log(`server up: ${PORT}`);
-})
+
