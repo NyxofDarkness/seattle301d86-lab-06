@@ -38,12 +38,23 @@ Number and name of feature: weather
 
 Estimate of time needed to complete: 1 hour
 
-Start time: 745
+Start time: 230
 
-Finish time: 
+Finish time: 7
 
-Actual time needed to complete: _____
+Actual time needed to complete: 4.5 hours
+
+Number and name of feature: 
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 230
+
+Finish time: 7
+
+Actual time needed to complete: 4.5 hours
+
 
 ## Credits and Collaborations
-Ricardo
--->
+(Ricardo 
+(Bryant Davis)[https://www.linkedin.com/in/bryantdavis-sd/]
