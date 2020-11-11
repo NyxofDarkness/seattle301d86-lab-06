@@ -90,9 +90,7 @@ function handleWeather(req, res) {
   console.log(url);
   superagent.get(url)
     .then(data => {
-      console.log(data.body.data);
-      // const results = data.body;
-      const weatherData = data.body.data.map(date => new WeatherLocation(city, date));
+      const weatherData = data.body.data.map(weatherData => new WeatherLocation(city, weatherData));
       res.json(weatherData);
     })
     .catch(error => console.error(error))
@@ -147,5 +145,3 @@ app.use('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`server up: ${PORT}`);
 })
-
-
