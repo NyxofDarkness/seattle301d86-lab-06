@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 5000;
 const GEOCODE_API_KEY = process.env.GEOCODE_API_KEY;
 const ZOMATO_API_KEY = process.env.ZOMATO_API_KEY;
 const WEATHERBIT_API_KEY = process.env.WEATHERBIT_API_KEY;
+const TRAIL_API_KEY = process.env.TRAIL_API_KEY;
 
 app.use(cors());
 // checks done to here. all green
@@ -28,7 +29,7 @@ app.get('/', (req, res) => {
 app.get('/location', handleLocation);
 app.get('/weather', handleWeather);
 app.get('/restaurants', handleRestaurants);
-
+app.get('/trails', handleTrails);
 app.get('*', handleNotFound);
 // put this at the bottom after all other route handlers!
 
@@ -95,22 +96,32 @@ function handleWeather(req, res) {
     })
     .catch(error => console.error(error))
 }
-//   if (req.query.city !== '') {
-//     try {
-//       let weatherData = require('./data/weather.json');
-//       let cityWeather = req.query.cityWeather;
-//       let weatherDataObject = new WeatherLocation(cityWeather, weatherData);
-//       let weatherArray = [];
-//       weatherArray.push(weatherDataObject);
-//       res.send(weatherArray);
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   } else {
-//     res.status(500).send('Sorry, something went wrong');
-//   }
 
-// }
+function handleTrails(req, res) {
+
+  let city = req.query.search_query;
+  let url = `https://www.hikingproject.com/data/get-trails?lat=${geoData}&lon=${geoData}&maxDistance=30&key=${TRAIL_API_KEY}`
+  //////// lat and long not working in this one? maybe add a global array?
+  superagent.get(url)
+    .then(trailForCity => {
+      trailForCity.body.handleTrails.map(element =>
+        new Trails(element));
+      res.json(trailForCity);
+    })
+    .catch(error => console.error(error))
+}
+function Trails(trailForCity) {
+  this.name = trailForCity.name;
+  this.location = trailForCity.location;
+  this.length = trailForCity.length;
+  this.stars = trailForCity.stars;
+  this.stars_votes = trailForCity.stars_votes;
+  this.summary = trailForCity.summary;
+  this.trail_url = trailForCity.trail_url;
+  this.conditions = trailForCity.conditions;
+  this.condition_date = trailForCity.conditions_date;
+  this.condition_time = trailForCity.condition_time;
+}
 
 function Location(city, geoData) {
   this.search_query = city;
