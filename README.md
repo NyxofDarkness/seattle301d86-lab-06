@@ -14,31 +14,33 @@
 <!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
 
 ## Change Log
-Number and name of feature: convert search query to lat and lon.
+Number and name of feature: repo set up
 
-Estimate of time needed to complete: _____
+Estimate of time needed to complete:1 hour
 
-Start time: _____
+Start time: 1130
 
-Finish time: _____
+Finish time:1230
 
-Actual time needed to complete: _____
-Number and name of feature: constructor function to ensure each object is same format, ensure render correctly
+Actual time needed to complete:1 hour
 
-Estimate of time needed to complete: _____
+Number and name of feature: locations
 
-Start time: _____
+Estimate of time needed to complete: 2 hours
 
-Finish time: _____
+Start time: 130
 
-Actual time needed to complete: _____
-Number and name of feature: deploy backend URL, ensure works on city explorer welcome page
+Finish time: 7.10
 
-Estimate of time needed to complete: _____
+Actual time needed to complete: 4 hours, 40 minutes
 
-Start time: _____
+Number and name of feature: weather
 
-Finish time: _____
+Estimate of time needed to complete: 1 hour
+
+Start time: 745
+
+Finish time: 
 
 Actual time needed to complete: _____
 
