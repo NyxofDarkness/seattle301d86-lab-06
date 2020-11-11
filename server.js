@@ -118,6 +118,7 @@ function handleTrails(req, res) {
 
   if (trails[url]) {
     res.send(trails[url]);
+    //// why did they have me put this? 
   } else {
     superagent.get(url)
       .then(trails => {
