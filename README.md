@@ -44,13 +44,24 @@ Finish time: 7
 
 Actual time needed to complete: 4.5 hours
 
-Number and name of feature: 
+Number and name of feature: movies
 
 Estimate of time needed to complete: 1 hour
 
-Start time: 230
+Start time: 2
 
-Finish time: 7
+Finish time: 
+
+Actual time needed to complete: 4.5 hours
+
+
+Number and name of feature: yelp
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 
+
+Finish time: 
 
 Actual time needed to complete: 4.5 hours
 
@@ -60,3 +71,4 @@ Actual time needed to complete: 4.5 hours
 (Bryant Davis)[https://www.linkedin.com/in/bryantdavis-sd/]
 (SQL Toutorial)[https://www.mysqltutorial.org/mysql-decimal/]
 (w3schools)[https://www.w3schools.com/sql/sql_create_table.asp]
+()

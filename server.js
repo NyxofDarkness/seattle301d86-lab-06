@@ -2,84 +2,34 @@
 
 require('dotenv').config();
 
-
 const express = require('express');
 const pg = require('pg'); //between server and database!
 const superagent = require('superagent');
 const cors = require('cors');
 const client = new pg.Client(process.env.DATABASE_URL);
 const app = express();
-
-
 const PORT = process.env.PORT || 5000;
-
 const GEOCODE_API_KEY = process.env.GEOCODE_API_KEY;
-// const ZOMATO_API_KEY = process.env.ZOMATO_API_KEY;
 const WEATHERBIT_API_KEY = process.env.WEATHERBIT_API_KEY;
 const TRAIL_API_KEY = process.env.TRAIL_API_KEY;
-
-
-
+const MOVIES_API_KEY = process.env.MOVIES_API_KEY;
+const YELP_API_KEY = process.env.YELP_API_KEY
 
 app.use(cors());
-// checks done to here. all green
-// locationIQ Api to give us the lat, lon information, we use to feed into Zomato API to get back specific restraunts
-
 app.use(express.static('./public'));
 app.get('/', (req, res) => {
   res.send('Homepage');
 })
-// app.get('/restaurants', handleRestaurants)
-// app.get('/location', (req, res) => {
-//   let city = req.query.city;
-//   let longitude = req.query.longitude;
-//   let latitude = req.query.latitude;
-
-//   let SQL = 'INSERT INTO location (city, longitude, latitude) VALUES ($1, $2, $3) RETURNING *';
-//   let values = [city, longitude, latitude];
-
-//   client.query(SQL, values)
-//     .then(results => {
-//       res.status(201).json(results.rows);
-//     })
-//     .catch(error => {
-//       res.status(500).send('no place!');
-//     })
-// });
-
-// app.get('/location', (req, res) => {
-//   let SQL = 'SELECT * FROM location';
-
-//   client.query(SQL)
-//     .then(data => {
-//       res.json(data.rows);
-//     })
-//     .catch(error => console.error(err));
-// })
-
-// client.connect()
-//   .then(() => {
-//     console.log(`server up! ${PORT}`);
-//   });
-
-// .catch (error => console.log(err));
-
-// app.get('/location', handleLocation);
 app.get('/weather', handleWeather);
-
 app.get('/restaurants', handleRestaurants);
 app.get('/trails', handleTrails);
-// app.get('*', handleNotFound);
 app.get('/location', handleLocation);
-// app.get('/weather', (req, res) => {
-//   let first = req.query.first;
-//   let last = req.query.last;
+app.get('/movies', handleLocation);
+app.get('/yelp', handleLocation);
 
-// }
 
 
 function handleLocation(req, res) {
-  // console.log('in location handler');
   let city = req.query.city;
   let url = `http://us1.locationiq.com/v1/search.php?key=${GEOCODE_API_KEY}&q=${city}&format=json&limit=1`;
   let locations = {};
@@ -92,13 +42,12 @@ function handleLocation(req, res) {
         const geoData = data.body[0];
         const location = new Location(city, geoData);
         locations[url] = location;
-        // res.json(location);
-        let SQL = 'INSERT INTO location (search_query, formatted_query, latitude, longitude) VALUES ($1, $2, $3, $4) RETURNING *';
+        let SQL = 'INSERT INTO location (search_query, formated_query, latitude, longitude) VALUES ($1, $2, $3, $4) RETURNING *';
         let values = [location.search_query, location.formatted_query, location.latitude, location.latitude];
 
         client.query(SQL, values)
           .then(results => {
-            console.log('Stuff is coming...', results.row);
+            console.log('Stuff is coming...', results.rows);
           })
           .catch(error => {
             res.status(500).send(error);
@@ -123,7 +72,6 @@ function handleRestaurants(req, res) {
     .then(data => {
       const results = data.body;
       const restaurantData = [];
-
       results.nearby_restaurants.forEach(item => {
         restaurantData.push(new Restaurant(item));
       });
