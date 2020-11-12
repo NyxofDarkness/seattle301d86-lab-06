@@ -1,11 +1,12 @@
-CREATE TABLE Location(
-  city VARCHAR(50)
-  longitude INTEGER
-  latitude INTEGER
+DROP TABLE IF EXISTS location;
+
+CREATE TABLE location (
+  id SERIAL PRIMARY KEY,
+  search_query VARCHAR(254),
+  formated_query VARCHAR(254),
+  latitude DECIMAL(9, 6),
+  longitude DECIMAL(9, 6)
 );
 
--- function WeatherLocation(city, weatherData) {
---   this.search_query = city;
---   this.forecast = weatherData.weather.description;
---   this.time = weatherData.valid_date;
+
 
