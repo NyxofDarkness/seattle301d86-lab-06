@@ -56,5 +56,7 @@ Actual time needed to complete: 4.5 hours
 
 
 ## Credits and Collaborations
-(Ricardo 
+(Ricardo Barcenas)[https://github.com/ZenAtomsk]
 (Bryant Davis)[https://www.linkedin.com/in/bryantdavis-sd/]
+(SQL Toutorial)[https://www.mysqltutorial.org/mysql-decimal/]
+(w3schools)[https://www.w3schools.com/sql/sql_create_table.asp]
