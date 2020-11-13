@@ -9,26 +9,30 @@ const cors = require('cors');
 const client = new pg.Client(process.env.DATABASE_URL);
 const app = express();
 const PORT = process.env.PORT || 5000;
-const GEOCODE_API_KEY = process.env.GEOCODE_API_KEY;
+// api key routes
+const GEOCODE_API_KEY = process.env.GEOCODE_API_KEY; ///SQL hooked up
 const WEATHERBIT_API_KEY = process.env.WEATHERBIT_API_KEY;
 const TRAIL_API_KEY = process.env.TRAIL_API_KEY;
 const MOVIES_API_KEY = process.env.MOVIES_API_KEY;
-const YELP_API_KEY = process.env.YELP_API_KEY
+const YELP_API_KEY = process.env.YELP_API_KEY;
 
+// const yelp = require('yelp-fusion'); //okay trying this later
+//things the app needs
 app.use(cors());
 app.use(express.static('./public'));
 app.get('/', (req, res) => {
   res.send('Homepage');
 })
-app.get('/weather', handleWeather);
-app.get('/restaurants', handleRestaurants);
-app.get('/trails', handleTrails);
+//get the things
 app.get('/location', handleLocation);
-app.get('/movies', handleLocation);
-app.get('/yelp', handleLocation);
+app.get('/weather', handleWeather);
+app.get('/trails', handleTrails);
+// app.get('/yelp', handleRestaurants);
+// app.get('/movies', handleMovies);
 
 
 
+// functions to request info from API, gets the info back to sql, displays in table in terminal, and displays on page using user input
 function handleLocation(req, res) {
   let city = req.query.city;
   let url = `http://us1.locationiq.com/v1/search.php?key=${GEOCODE_API_KEY}&q=${city}&format=json&limit=1`;
@@ -44,7 +48,6 @@ function handleLocation(req, res) {
         locations[url] = location;
         let SQL = 'INSERT INTO location (search_query, formated_query, latitude, longitude) VALUES ($1, $2, $3, $4) RETURNING *';
         let values = [location.search_query, location.formatted_query, location.latitude, location.latitude];
-
         client.query(SQL, values)
           .then(results => {
             console.log('Stuff is coming...', results.rows);
@@ -60,24 +63,35 @@ function handleLocation(req, res) {
   }
 }
 
-function handleRestaurants(req, res) {
-  const url = `https://developers.zomato.com/api/v2.1/geocode`
-  const queryParameters = {
-    lat: req.query.latitude,
-    lng: req.query.longitude
-  }
-  superagent.get(url)
-    .query(queryParameters)
-    .set('user-key, ZOMATO_API_KEY')
-    .then(data => {
-      const results = data.body;
-      const restaurantData = [];
-      results.nearby_restaurants.forEach(item => {
-        restaurantData.push(new Restaurant(item));
-      });
-      res.json(restaurantData);
-    })
-}
+// function handleRestaurants(req, res) {
+//   const url = `https://api.yelp.com/v3/businesses/search?`
+//   const queryParameters = {
+//     lat: req.query.latitude,
+//     lng: req.query.longitude
+//   }
+//   superagent.get(url)
+//     .query(queryParameters)
+//     .set('user-key, ZOMATO_API_KEY')
+//     .then(data => {
+//       const results = data.body;
+//       const restaurantData = [];
+//       results.nearby_restaurants.forEach(item => {
+//         restaurantData.push(new Restaurant(item));
+//       });
+//       let SQL = 'INSERT INTO restaurants (restaurant, cuisines, locality) VALUES ($1, $2, $3) RETURNING *';
+//       let values = [restaurants.restaurant, restaurants.cuisines, restaurants.locality];
+
+//       client.query(SQL, values)
+//         .then(results => {
+//           console.log('stuff is coming...', results.rows);
+//         })
+//       res.json(restaurantData);
+//     })
+//     .catch(() => {
+//       console.error('Try Again')
+//     }
+//   }
+// }
 
 
 function handleWeather(req, res) {
@@ -87,9 +101,16 @@ function handleWeather(req, res) {
   superagent.get(url)
     .then(data => {
       const weatherData = data.body.data.map(weatherData => new WeatherLocation(city, weatherData));
+      let SQL = 'INSERT INTO weather (forecast) VALUES ($1) RETURNING *';
+      let values = [weatherData.search_query, weatherData.forecast];
+
+      client.query(SQL, values)
+        .then(results => {
+          console.log('Stuff is coming...', results.rows);
+        })
+        .catch(error => console.error(error))
       res.json(weatherData);
     })
-    .catch(error => console.error(error))
 }
 
 function handleTrails(req, res) {
@@ -141,11 +162,11 @@ function WeatherLocation(city, weatherData) {
   this.time = weatherData.valid_date;
   // weatherArray.push(this);
 }
-function Restaurant(entry) {
-  this.restaurant = entry.restaurant.name;
-  this.cuisines = entry.restaurant.cuisines;
-  this.locality = entry.restaurant.location.locality;
-}
+// function Restaurant(entry) {
+//   this.restaurant = entry.restaurant.name;
+//   this.cuisines = entry.restaurant.cuisines;
+//   this.locality = entry.restaurant.location.locality;
+// }
 
 // function handleNotFound(req, res) {
 //   res.status(404).send('not found');
