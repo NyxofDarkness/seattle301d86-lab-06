@@ -140,3 +140,7 @@ bld/
 [Ll]og/
 
 /.env
+.env
+.env.example
+.env.local
+.env.staging
