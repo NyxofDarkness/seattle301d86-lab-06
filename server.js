@@ -1,7 +1,7 @@
 'use strict';
 
 require('dotenv').config();
-
+// gotta refactor
 const express = require('express');
 const pg = require('pg'); //between server and database!
 const superagent = require('superagent');
