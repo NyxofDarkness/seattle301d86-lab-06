@@ -9,7 +9,7 @@ const cors = require('cors');
 const client = new pg.Client(process.env.DATABASE_URL);
 const app = express();
 const PORT = process.env.PORT || 5000;
-// api key routes
+// api key routes  here
 const GEOCODE_API_KEY = process.env.GEOCODE_API_KEY; ///SQL hooked up
 const WEATHERBIT_API_KEY = process.env.WEATHERBIT_API_KEY;
 const TRAIL_API_KEY = process.env.TRAIL_API_KEY;
